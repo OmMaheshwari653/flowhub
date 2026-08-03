@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import Image from "next/image";
 
 const registerSchema = z
   .object({
@@ -89,6 +90,12 @@ const Register = () => {
                     disabled={isPending}
                     onClick={() => router.push("/api/auth/signin/github")}
                   >
+                    <Image
+                      src="/logos/github.svg"
+                      alt="GitHub"
+                      width={20}
+                      height={20}
+                    />
                     Continue with github
                   </Button>
                   <Button
@@ -98,6 +105,12 @@ const Register = () => {
                     disabled={isPending}
                     onClick={() => router.push("/api/auth/signin/google")}
                   >
+                    <Image
+                      src="/logos/google.svg"
+                      alt="Google"
+                      width={20}
+                      height={20}
+                    />
                     Continue with google
                   </Button>
                 </div>

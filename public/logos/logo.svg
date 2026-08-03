@@ -1,0 +1,56 @@
+<svg width="460" height="160" viewBox="0 0 460 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">flowHub logo</title>
+  <desc id="desc">Workflow automation hub icon connected to three nodes, next to the flowHub wordmark</desc>
+
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#312E81" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Icon: hub + connected nodes -->
+  <g transform="translate(20,20)" filter="url(#softShadow)">
+    <!-- connectors -->
+    <path d="M18,30 C40,30 45,50 60,60" fill="none" stroke="url(#grad1)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M18,90 C40,90 45,70 60,60" fill="none" stroke="url(#grad1)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M60,60 C78,60 90,60 108,60" fill="none" stroke="url(#grad1)" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- animated flow dots -->
+    <circle r="3.2" fill="#ffffff">
+      <animateMotion dur="2.4s" repeatCount="indefinite" path="M18,30 C40,30 45,50 60,60"/>
+    </circle>
+    <circle r="3.2" fill="#ffffff">
+      <animateMotion dur="2.4s" begin="0.4s" repeatCount="indefinite" path="M18,90 C40,90 45,70 60,60"/>
+    </circle>
+    <circle r="3.2" fill="#ffffff">
+      <animateMotion dur="1.6s" begin="0.8s" repeatCount="indefinite" path="M60,60 C78,60 90,60 108,60"/>
+    </circle>
+
+    <!-- satellite nodes -->
+    <circle cx="18" cy="30" r="11" fill="url(#grad2)"/>
+    <circle cx="18" cy="30" r="4" fill="#ffffff" opacity="0.9"/>
+
+    <circle cx="18" cy="90" r="11" fill="url(#grad2)"/>
+    <circle cx="18" cy="90" r="4" fill="#ffffff" opacity="0.9"/>
+
+    <circle cx="108" cy="60" r="14" fill="url(#grad1)"/>
+    <circle cx="108" cy="60" r="5" fill="#ffffff" opacity="0.9"/>
+
+    <!-- central hub -->
+    <circle cx="60" cy="60" r="21" fill="#ffffff"/>
+    <circle cx="60" cy="60" r="21" fill="url(#grad1)" opacity="0.15"/>
+    <circle cx="60" cy="60" r="21" fill="none" stroke="url(#grad1)" stroke-width="3"/>
+    <circle cx="60" cy="60" r="7" fill="url(#grad1)"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="172" y="97" font-family="'Poppins','Segoe UI',Helvetica,Arial,sans-serif" font-weight="700" font-size="46" fill="#1E293B">flow<tspan fill="url(#grad1)">Hub</tspan></text>
+</svg>
