@@ -1,5 +1,6 @@
 // src/inngest/functions.ts
 import { inngest } from "./client";
+import { createGoogle } from "@ai-sdk/google";
 
 export const processTask = inngest.createFunction(
   { id: "process-task", triggers: { event: "app/task.created" } },
@@ -13,3 +14,7 @@ export const processTask = inngest.createFunction(
     return { message: `Task ${event.data.id} complete`, result };
   },
 );
+
+const google = createGoogle({
+  // custom settings
+});
