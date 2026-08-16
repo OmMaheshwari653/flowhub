@@ -16,13 +16,15 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 // since it's not very descriptive.
 // For instance, the use of a t variable
 // is common in i18n libraries.
+import superjson from "superjson";
+
 const t = initTRPC
   .context<Awaited<ReturnType<typeof createTRPCContext>>>()
   .create({
     /**
      * @see https://trpc.io/docs/server/data-transformers
      */
-    // transformer: superjson,
+    transformer: superjson,
   });
 // Base router and procedure helpers
 export const createTRPCRouter = t.router;

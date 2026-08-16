@@ -25,20 +25,19 @@ export const useSuspenseWorkflows = () => {
 
 export const useCreateWorkflow = () => {
   const queryClient = useQueryClient();
-  //useQueryClient() is a hook from React Query that provides access to the query client instance. It allows you to interact with the cache and perform actions like invalidating queries or updating cached data.
-
   const trpc = useTRPC();
 
-  return trpc.workflows.create.mutationOptions({
-    onSuccess: (data) => {
-      toast.success(`Workflow created: ${data.name}`);
-      queryClient.invalidateQueries(trpc.workflows.getMany.queryOptions({}));
-      //invalidateQueries is a method from React Query that allows you to mark specific queries as stale, triggering a refetch the next time they are accessed. In this case, it invalidates the query for fetching all workflows, ensuring that the newly created workflow is included in the updated list when the query is refetched.
-    },
-    onError: (error) => {
-      toast.error(`Error creating workflow: ${error.message}`);
-    },
-  });
+  return useMutation(
+    trpc.workflows.create.mutationOptions({
+      onSuccess: (data) => {
+        toast.success(`Workflow created: ${data.name}`);
+        queryClient.invalidateQueries(trpc.workflows.getMany.queryOptions({}));
+      },
+      onError: (error) => {
+        toast.error(`Error creating workflow: ${error.message}`);
+      },
+    }),
+  );
 };
 
 // Hook to remove a workflow

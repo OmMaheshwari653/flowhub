@@ -29,6 +29,8 @@ function getUrl() {
   })();
   return `${base}/api/trpc`;
 }
+import superjson from "superjson";
+
 export function TRPCReactProvider(
   props: Readonly<{
     children: React.ReactNode;
@@ -43,7 +45,7 @@ export function TRPCReactProvider(
     createTRPCClient<AppRouter>({
       links: [
         httpBatchLink({
-          // transformer: superjson, <-- if you use a data transformer
+          transformer: superjson,
           url: getUrl(),
         }),
       ],
