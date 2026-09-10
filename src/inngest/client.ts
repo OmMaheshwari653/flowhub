@@ -1,4 +1,8 @@
 // src/inngest/client.ts
 import { Inngest } from "inngest";
+import { realtimeMiddleware } from "@inngest/realtime/middleware";
 
-export const inngest = new Inngest({ id: "flow-hub" });
+export const inngest = new Inngest({
+  id: "flow-hub",
+  middleware: [realtimeMiddleware()],
+});
