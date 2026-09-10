@@ -3,7 +3,8 @@ import { inngest } from "./client";
 import { createGoogle } from "@ai-sdk/google";
 
 export const processTask = inngest.createFunction(
-  { id: "process-task", triggers: { event: "app/task.created" } },
+  { id: "process-task" },
+  { event: "app/task.created" },
   async ({ event, step }) => {
     const result = await step.run("handle-task", async () => {
       return { processed: true, id: event.data.id };
