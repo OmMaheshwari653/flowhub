@@ -19,6 +19,7 @@ export function useNodeStatus({
   const [status, setStatus] = useState<NodeStatus>("initial");
 
   const { data } = useInngestSubscription({
+    //useInngestSubscription hook to subscribe to the specified channel and topic, and receive real-time updates for the node status.
     refreshToken,
     enabled: true,
   });
