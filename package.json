@@ -10,6 +10,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.65",
     "@ai-sdk/google": "^4.0.33",
     "@base-ui/react": "^1.6.0",
     "@hookform/resolvers": "^5.5.7",
@@ -26,7 +27,7 @@
     "@trpc/server": "^11.6.0",
     "@trpc/tanstack-react-query": "^11.6.0",
     "@xyflow/react": "^12.11.3",
-    "ai": "^7.0.51",
+    "ai": "^7.0.116",
     "better-auth": "^1.6.25",
     "class-variance-authority": "^0.7.1",
     "client-only": "^0.0.1",
@@ -36,6 +37,7 @@
     "date-fns": "^4.4.0",
     "embla-carousel-react": "^8.6.0",
     "handlebars": "^4.7.9",
+    "html-entities": "^2.6.0",
     "inngest": "^3.54.2",
     "input-otp": "^1.4.2",
     "jotai": "^2.20.2",
