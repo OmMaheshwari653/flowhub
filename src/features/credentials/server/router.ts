@@ -67,18 +67,10 @@ export const credentialsRouter = createTRPCRouter({
     }),
 
   getOne: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      }),
-    )
-    .query(({ input, ctx }) => {
-      const { id } = input;
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
       return prisma.credential.findUniqueOrThrow({
-        where: {
-          id: id,
-          userId: ctx.auth.user.id,
-        },
+        where: { id: input.id, userId: ctx.auth.user.id },
       });
     }),
 
