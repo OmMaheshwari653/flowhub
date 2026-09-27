@@ -9,6 +9,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardContent,
 } from "@/components/ui/card";
 import {
   Form,
@@ -43,6 +44,38 @@ const Login = () => {
     },
   });
 
+  const signInGithub = async () => {
+    await authClient.signIn.social(
+      {
+        provider: "github",
+      },
+      {
+        onSuccess: () => {
+          router.push("/");
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message || "Something went wrong");
+        },
+      },
+    );
+  };
+
+  const signInGoogle = async () => {
+    await authClient.signIn.social(
+      {
+        provider: "google",
+      },
+      {
+        onSuccess: () => {
+          router.push("/");
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message || "Something went wrong");
+        },
+      },
+    );
+  };
+
   const onSubmit = async (values: loginFormValues) => {
     // Handle login logic here
     await authClient.signIn.email(
@@ -63,45 +96,48 @@ const Login = () => {
   };
 
   const isPending = form.formState.isSubmitting;
+
   return (
     <div className="flex flex-col gap-6">
       <Card>
         <CardHeader className="text-center">
-          <CardTitle>Welcome Back</CardTitle>
+          <CardTitle>Welcome back</CardTitle>
           <CardDescription>Login to continue</CardDescription>
+        </CardHeader>
+        <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid gap-6">
                 <div className="flex flex-col gap-4">
                   <Button
-                    className="w-full"
+                    onClick={signInGithub}
                     variant="outline"
+                    className="w-full"
                     type="button"
                     disabled={isPending}
-                    onClick={() => router.push("/api/auth/signin/github")}
                   >
                     <Image
-                      src="/logos/github.svg"
                       alt="GitHub"
+                      src="/logos/github.svg"
                       width={20}
                       height={20}
                     />
-                    Continue with github
+                    Continue with GitHub
                   </Button>
                   <Button
-                    className="w-full"
+                    onClick={signInGoogle}
                     variant="outline"
+                    className="w-full"
                     type="button"
                     disabled={isPending}
-                    onClick={() => router.push("/api/auth/signin/google")}
                   >
                     <Image
-                      src="/logos/google.svg"
                       alt="Google"
+                      src="/logos/google.svg"
                       width={20}
                       height={20}
                     />
-                    Continue with google
+                    Continue with Google
                   </Button>
                 </div>
                 <div className="grid gap-6">
@@ -114,7 +150,7 @@ const Login = () => {
                         <FormControl>
                           <Input
                             type="email"
-                            placeholder="dev@example.com"
+                            placeholder="m@example.com"
                             {...field}
                           />
                         </FormControl>
@@ -131,7 +167,7 @@ const Login = () => {
                         <FormControl>
                           <Input
                             type="password"
-                            placeholder="••••••••"
+                            placeholder="*********"
                             {...field}
                           />
                         </FormControl>
@@ -139,12 +175,12 @@ const Login = () => {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" disabled={isPending} className="w-full">
+                  <Button type="submit" className="w-full" disabled={isPending}>
                     Login
                   </Button>
                 </div>
                 <div className="text-center text-sm">
-                  Don&apos;t have an acount?
+                  Don&apos;t have an account?{" "}
                   <Link href="/signup" className="underline underline-offset-4">
                     Sign up
                   </Link>
@@ -152,7 +188,7 @@ const Login = () => {
               </div>
             </form>
           </Form>
-        </CardHeader>
+        </CardContent>
       </Card>
     </div>
   );
