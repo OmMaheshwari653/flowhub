@@ -13,8 +13,8 @@ import {
 } from "@/components/entity-components";
 import { useSuspenseExecutions } from "../hooks/use-executions";
 import { useExecutionsParams } from "../hooks/use-executions-params";
-import type { Execution } from "@/generated/prisma";
-import { ExecutionStatus } from "@/generated/prisma";
+import type { Execution } from "@/generated/prisma/browser";
+import { ExecutionStatus } from "@/generated/prisma/browser";
 import {
   CheckCircle2Icon,
   ClockIcon,
