@@ -106,7 +106,7 @@ export const CredentialsEmpty = () => {
   const router = useRouter();
 
   const handleCreate = () => {
-    router.push("/credentials/create");
+    router.push("/credentials/new");
   };
 
   return (
