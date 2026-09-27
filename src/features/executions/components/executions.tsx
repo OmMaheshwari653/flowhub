@@ -7,9 +7,9 @@ import {
   EntityHeader,
   EntityItem,
   EntityList,
+  EntityListSkeleton,
   EntityPagination,
   ErrorView,
-  LoadingView,
 } from "@/components/entity-components";
 import { useSuspenseExecutions } from "../hooks/use-executions";
 import { useExecutionsParams } from "../hooks/use-executions-params";
@@ -74,7 +74,7 @@ export const ExecutionsContainer = ({
 };
 
 export const ExecutionsLoading = () => {
-  return <LoadingView message="Loading executions..." />;
+  return <EntityListSkeleton />;
 };
 
 export const ExecutionsError = () => {

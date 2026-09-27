@@ -6,10 +6,10 @@ import {
   EntityHeader,
   EntityItem,
   EntityList,
+  EntityListSkeleton,
   EntityPagination,
   EntitySearch,
   ErrorView,
-  LoadingView,
 } from "@/components/entity-components";
 
 import {
@@ -95,7 +95,7 @@ export const CredentialsContainer = ({
 };
 
 export const CredentialsLoading = () => {
-  return <LoadingView message="Loading credentials..." />;
+  return <EntityListSkeleton />;
 };
 
 export const CredentialsError = () => {

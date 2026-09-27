@@ -2,8 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import { Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -51,7 +53,18 @@ export function RegisterForm() {
     },
   });
 
+  /*
+   * Kaunsa action chal raha hai ye track karte hain. react-hook-form ka
+   * isSubmitting sirf email wale form ko cover karta hai, social buttons ko
+   * nahi - isliye click karne pe screen "jam" lagti thi. Success pe hum ise
+   * reset nahi karte, kyunki uske baad redirect hona hai.
+   */
+  const [pending, setPending] = useState<
+    "credentials" | "github" | "google" | null
+  >(null);
+
   const signInGithub = async () => {
+    setPending("github");
     await authClient.signIn.social(
       {
         provider: "github",
@@ -61,6 +74,8 @@ export function RegisterForm() {
           router.push("/");
         },
         onError: () => {
+          setPending(null);
+          setPending(null);
           toast.error("Something went wrong");
         },
       },
@@ -68,6 +83,7 @@ export function RegisterForm() {
   };
 
   const signInGoogle = async () => {
+    setPending("google");
     await authClient.signIn.social(
       {
         provider: "google",
@@ -77,6 +93,8 @@ export function RegisterForm() {
           router.push("/");
         },
         onError: () => {
+          setPending(null);
+          setPending(null);
           toast.error("Something went wrong");
         },
       },
@@ -84,6 +102,7 @@ export function RegisterForm() {
   };
 
   const onSubmit = async (values: RegisterFormValues) => {
+    setPending("credentials");
     await authClient.signUp.email(
       {
         name: values.email,
@@ -96,13 +115,14 @@ export function RegisterForm() {
           router.push("/");
         },
         onError: (ctx) => {
+          setPending(null);
           toast.error(ctx.error.message);
         },
       },
     );
   };
 
-  const isPending = form.formState.isSubmitting;
+  const isPending = pending !== null || form.formState.isSubmitting;
 
   return (
     <div className="flex flex-col gap-6">
@@ -123,12 +143,16 @@ export function RegisterForm() {
                     type="button"
                     disabled={isPending}
                   >
-                    <Image
-                      alt="GitHub"
-                      src="/logos/github.svg"
-                      width={20}
-                      height={20}
-                    />
+                    {pending === "github" ? (
+                      <Loader2Icon className="size-5 animate-spin" />
+                    ) : (
+                      <Image
+                        alt="GitHub"
+                        src="/logos/github.svg"
+                        width={20}
+                        height={20}
+                      />
+                    )}
                     Continue with GitHub
                   </Button>
                   <Button
@@ -138,12 +162,16 @@ export function RegisterForm() {
                     type="button"
                     disabled={isPending}
                   >
-                    <Image
-                      alt="Google"
-                      src="/logos/google.svg"
-                      width={20}
-                      height={20}
-                    />
+                    {pending === "google" ? (
+                      <Loader2Icon className="size-5 animate-spin" />
+                    ) : (
+                      <Image
+                        alt="Google"
+                        src="/logos/google.svg"
+                        width={20}
+                        height={20}
+                      />
+                    )}
                     Continue with Google
                   </Button>
                 </div>
@@ -200,7 +228,10 @@ export function RegisterForm() {
                     )}
                   />
                   <Button type="submit" className="w-full" disabled={isPending}>
-                    Sign up
+                    {pending === "credentials" && (
+                      <Loader2Icon className="size-4 animate-spin" />
+                    )}
+                    {pending === "credentials" ? "Creating account..." : "Sign up"}
                   </Button>
                 </div>
                 <div className="text-center text-sm">

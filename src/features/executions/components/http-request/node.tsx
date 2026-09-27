@@ -1,7 +1,7 @@
 "use client";
 
 import { useReactFlow, type Node, type NodeProps } from "@xyflow/react";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useNodeStatus } from "@/features/executions/hooks/use-node-status";
 import { HTTP_REQUEST_CHANNEL_NAME } from "@/inngest/channels/http-request";
 import { fetchHttpRequestRealtimeToken } from "./actions";
@@ -65,7 +65,7 @@ type HttpRequestNodeType = Node<HttpRequestNodeData>;
  * phir ReactFlow naye props ke saath component dobara render karega.
  * Note: HttpRequestNode ko config/node-components.ts mein register karna zaroori hai, warna ye render nahi hoga.
  */
-export const HttpRequestNode = (props: NodeProps<HttpRequestNodeType>) => {
+export const HttpRequestNode = memo((props: NodeProps<HttpRequestNodeType>) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { setNodes } = useReactFlow(); //useReactFlow hook to get the setNodes function, which allows us to update the nodes in the flow.
 
@@ -120,4 +120,6 @@ export const HttpRequestNode = (props: NodeProps<HttpRequestNodeType>) => {
       />
     </>
   );
-};
+});
+
+HttpRequestNode.displayName = "HttpRequestNode";

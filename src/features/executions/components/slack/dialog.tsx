@@ -119,7 +119,7 @@ export const SlackDialog = ({
                   <FormLabel>Webhook URL</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="https://discord.com/api/webhooks/..."
+                      placeholder="https://slack.com/api/webhooks/..."
                       {...field}
                     />
                   </FormControl>

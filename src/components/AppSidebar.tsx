@@ -21,6 +21,7 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar";
 import Link from "next/link";
+import { LinkPendingIndicator } from "./link-pending-indicator";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
@@ -87,9 +88,10 @@ const AppSidebar = () => {
                       asChild
                       className="gap-x-4 h-10 px-4"
                     >
-                      <Link href={item.url}>
+                      <Link href={item.url} prefetch>
                         <item.icon className="size-4" />
                         <span>{item.title}</span>
+                        <LinkPendingIndicator className="ml-auto" />
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

@@ -7,10 +7,10 @@ import {
   EntityHeader,
   EntityItem,
   EntityList,
+  EntityListSkeleton,
   EntityPagination,
   EntitySearch,
   ErrorView,
-  LoadingView,
 } from "@/components/entity-components";
 import {
   useCreateWorkflow,
@@ -115,7 +115,7 @@ export const WorkflowsContainer = ({
 };
 
 export const WorkflowsLoading = () => {
-  return <LoadingView message="Loading workflows..." />;
+  return <EntityListSkeleton />;
 };
 
 export const WorkflowsError = () => {

@@ -19,6 +19,8 @@ import {
   EmptyTitle,
 } from "./ui/empty";
 import { cn } from "@/lib/utils";
+import { LinkPendingIndicator } from "./link-pending-indicator";
+import { Skeleton } from "./ui/skeleton";
 import { Card, CardContent, CardDescription, CardTitle } from "./ui/card";
 import {
   DropdownMenu,
@@ -301,35 +303,122 @@ export const EntityItem = ({
               )}
             </div>
           </div>
-          {(actions || onRemove) && (
-            <div className="flex gap-x-4 items-center">
-              {actions}
-              {onRemove && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <MoreVerticalIcon className="size-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="end"
+          <div className="flex gap-x-4 items-center">
+            <LinkPendingIndicator />
+            {actions}
+            {onRemove && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="ghost"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <DropdownMenuItem onClick={handleRemove}>
-                      <TrashIcon className="size-4" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </div>
-          )}
+                    <MoreVerticalIcon className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <DropdownMenuItem onClick={handleRemove}>
+                    <TrashIcon className="size-4" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
         </CardContent>
       </Card>
     </Link>
+  );
+};
+
+/*
+ * ===== Skeletons =====
+ * LoadingView ek spinner dikhata hai, jo navigation ke waqt "screen jam" jaisa
+ * lagta hai. Ye skeletons asli layout ka shape pehle se paint kar dete hain,
+ * to page turant badla hua dikhta hai aur content aate hi jagah pe bhar jata hai.
+ */
+
+export const EntityItemSkeleton = () => {
+  return (
+    <Card className="p-4 shadow-none">
+      <CardContent className="flex flex-row items-center justify-between p-0">
+        <div className="flex items-center gap-3">
+          <Skeleton className="size-9 rounded-md" />
+          <div className="flex flex-col gap-y-2">
+            <Skeleton className="h-4 w-40" />
+            <Skeleton className="h-3 w-24" />
+          </div>
+        </div>
+        <Skeleton className="size-8 rounded-md" />
+      </CardContent>
+    </Card>
+  );
+};
+
+export const EntityListSkeleton = ({ count = 5 }: { count?: number }) => {
+  return (
+    <div className="flex flex-col gap-y-4">
+      {Array.from({ length: count }).map((_, index) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder list
+        <EntityItemSkeleton key={index} />
+      ))}
+    </div>
+  );
+};
+
+/**
+ * Poore list page ka skeleton - header, search aur list sab. Ye route ke
+ * loading.tsx me use hota hai, jahan header bhi abhi render nahi hua hota.
+ */
+export const EntityPageSkeleton = ({ count = 5 }: { count?: number }) => {
+  return (
+    <div className="p-4 md:px-10 md:py-6 h-full">
+      <div className="mx-auto max-w-screen-xl w-full flex flex-col gap-y-8 h-full">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-y-2">
+            <Skeleton className="h-7 w-44" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <Skeleton className="h-9 w-32 rounded-md" />
+        </div>
+        <div className="flex flex-col gap-y-4 h-full">
+          <Skeleton className="h-9 w-[200px] ml-auto rounded-md" />
+          <EntityListSkeleton count={count} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Detail pages (credential view / execution view) ke liye narrow skeleton.
+ */
+export const EntityDetailSkeleton = () => {
+  return (
+    <div className="p-4 md:px-10 md:py-6 h-full">
+      <div className="mx-auto max-w-screen-md w-full flex flex-col gap-y-8 h-full">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-y-2">
+            <Skeleton className="h-7 w-52" />
+            <Skeleton className="h-4 w-72" />
+          </div>
+          <Skeleton className="h-9 w-24 rounded-md" />
+        </div>
+        <div className="flex flex-col gap-y-6">
+          {Array.from({ length: 3 }).map((_, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder list
+            <div key={index} className="flex flex-col gap-y-2">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-9 w-full rounded-md" />
+            </div>
+          ))}
+          <Skeleton className="h-9 w-28 rounded-md" />
+        </div>
+      </div>
+    </div>
   );
 };

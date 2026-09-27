@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +26,7 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import Image from "next/image";
+import { Loader2Icon } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.email("Please enter a valid email address"),
@@ -44,7 +46,18 @@ const Login = () => {
     },
   });
 
+  /*
+   * Kaunsa action chal raha hai ye track karte hain. react-hook-form ka
+   * isSubmitting sirf email wale form ko cover karta hai, social buttons ko
+   * nahi - isliye click karne pe screen "jam" lagti thi. Success pe hum ise
+   * reset nahi karte, kyunki uske baad redirect hona hai.
+   */
+  const [pending, setPending] = useState<
+    "credentials" | "github" | "google" | null
+  >(null);
+
   const signInGithub = async () => {
+    setPending("github");
     await authClient.signIn.social(
       {
         provider: "github",
@@ -54,6 +67,7 @@ const Login = () => {
           router.push("/");
         },
         onError: (ctx) => {
+          setPending(null);
           toast.error(ctx.error.message || "Something went wrong");
         },
       },
@@ -61,6 +75,7 @@ const Login = () => {
   };
 
   const signInGoogle = async () => {
+    setPending("google");
     await authClient.signIn.social(
       {
         provider: "google",
@@ -70,6 +85,7 @@ const Login = () => {
           router.push("/");
         },
         onError: (ctx) => {
+          setPending(null);
           toast.error(ctx.error.message || "Something went wrong");
         },
       },
@@ -77,6 +93,7 @@ const Login = () => {
   };
 
   const onSubmit = async (values: loginFormValues) => {
+    setPending("credentials");
     // Handle login logic here
     await authClient.signIn.email(
       {
@@ -89,13 +106,14 @@ const Login = () => {
           router.push("/");
         },
         onError: (ctx: any) => {
+          setPending(null);
           toast.error(ctx.error.message);
         },
       },
     );
   };
 
-  const isPending = form.formState.isSubmitting;
+  const isPending = pending !== null || form.formState.isSubmitting;
 
   return (
     <div className="flex flex-col gap-6">
@@ -116,12 +134,16 @@ const Login = () => {
                     type="button"
                     disabled={isPending}
                   >
-                    <Image
-                      alt="GitHub"
-                      src="/logos/github.svg"
-                      width={20}
-                      height={20}
-                    />
+                    {pending === "github" ? (
+                      <Loader2Icon className="size-5 animate-spin" />
+                    ) : (
+                      <Image
+                        alt="GitHub"
+                        src="/logos/github.svg"
+                        width={20}
+                        height={20}
+                      />
+                    )}
                     Continue with GitHub
                   </Button>
                   <Button
@@ -131,12 +153,16 @@ const Login = () => {
                     type="button"
                     disabled={isPending}
                   >
-                    <Image
-                      alt="Google"
-                      src="/logos/google.svg"
-                      width={20}
-                      height={20}
-                    />
+                    {pending === "google" ? (
+                      <Loader2Icon className="size-5 animate-spin" />
+                    ) : (
+                      <Image
+                        alt="Google"
+                        src="/logos/google.svg"
+                        width={20}
+                        height={20}
+                      />
+                    )}
                     Continue with Google
                   </Button>
                 </div>
@@ -176,7 +202,10 @@ const Login = () => {
                     )}
                   />
                   <Button type="submit" className="w-full" disabled={isPending}>
-                    Login
+                    {pending === "credentials" && (
+                      <Loader2Icon className="size-4 animate-spin" />
+                    )}
+                    {pending === "credentials" ? "Logging in..." : "Login"}
                   </Button>
                 </div>
                 <div className="text-center text-sm">

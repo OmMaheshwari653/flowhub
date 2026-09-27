@@ -20,7 +20,7 @@ export function useEntitySearch<T extends { search: string; page: number }>({
   const [localSearch, setLocalSearch] = useState(params.search);
 
   useEffect(() => {
-    if (localSearch == "" && params.search == "") {
+    if (localSearch === "" && params.search !== "") {
       setParams({
         ...params,
         page: PAGINATION.DEFAULT_PAGE,
