@@ -1,9 +1,13 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -19,30 +23,26 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
-import Image from "next/image";
 
 const registerSchema = z
   .object({
     email: z.email("Please enter a valid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z.string().min(1, "Password is required"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"], // path of error
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
   });
 
-type registerFormValues = z.infer<typeof registerSchema>;
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
-const Register = () => {
+export function RegisterForm() {
   const router = useRouter();
 
-  const form = useForm<registerFormValues>({
+  const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
@@ -51,7 +51,39 @@ const Register = () => {
     },
   });
 
-  const onSubmit = async (values: registerFormValues) => {
+  const signInGithub = async () => {
+    await authClient.signIn.social(
+      {
+        provider: "github",
+      },
+      {
+        onSuccess: () => {
+          router.push("/");
+        },
+        onError: () => {
+          toast.error("Something went wrong");
+        },
+      },
+    );
+  };
+
+  const signInGoogle = async () => {
+    await authClient.signIn.social(
+      {
+        provider: "google",
+      },
+      {
+        onSuccess: () => {
+          router.push("/");
+        },
+        onError: () => {
+          toast.error("Something went wrong");
+        },
+      },
+    );
+  };
+
+  const onSubmit = async (values: RegisterFormValues) => {
     await authClient.signUp.email(
       {
         name: values.email,
@@ -61,22 +93,23 @@ const Register = () => {
       },
       {
         onSuccess: () => {
-          router.push("/login");
+          router.push("/");
         },
         onError: (ctx) => {
-          toast.error(ctx.error?.message ?? "Something went wrong");
+          toast.error(ctx.error.message);
         },
       },
     );
   };
 
   const isPending = form.formState.isSubmitting;
+
   return (
     <div className="flex flex-col gap-6">
       <Card>
         <CardHeader className="text-center">
           <CardTitle>Get Started</CardTitle>
-          <CardDescription>Create your account</CardDescription>
+          <CardDescription>Create your account to get started</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -84,34 +117,34 @@ const Register = () => {
               <div className="grid gap-6">
                 <div className="flex flex-col gap-4">
                   <Button
-                    className="w-full"
+                    onClick={signInGithub}
                     variant="outline"
+                    className="w-full"
                     type="button"
                     disabled={isPending}
-                    onClick={() => router.push("/api/auth/signin/github")}
                   >
                     <Image
-                      src="/logos/github.svg"
                       alt="GitHub"
+                      src="/logos/github.svg"
                       width={20}
                       height={20}
                     />
-                    Continue with github
+                    Continue with GitHub
                   </Button>
                   <Button
-                    className="w-full"
+                    onClick={signInGoogle}
                     variant="outline"
+                    className="w-full"
                     type="button"
                     disabled={isPending}
-                    onClick={() => router.push("/api/auth/signin/google")}
                   >
                     <Image
-                      src="/logos/google.svg"
                       alt="Google"
+                      src="/logos/google.svg"
                       width={20}
                       height={20}
                     />
-                    Continue with google
+                    Continue with Google
                   </Button>
                 </div>
                 <div className="grid gap-6">
@@ -124,7 +157,7 @@ const Register = () => {
                         <FormControl>
                           <Input
                             type="email"
-                            placeholder="dev@example.com"
+                            placeholder="m@example.com"
                             {...field}
                           />
                         </FormControl>
@@ -141,7 +174,7 @@ const Register = () => {
                         <FormControl>
                           <Input
                             type="password"
-                            placeholder="••••••••"
+                            placeholder="*********"
                             {...field}
                           />
                         </FormControl>
@@ -158,7 +191,7 @@ const Register = () => {
                         <FormControl>
                           <Input
                             type="password"
-                            placeholder="••••••••"
+                            placeholder="*********"
                             {...field}
                           />
                         </FormControl>
@@ -166,14 +199,14 @@ const Register = () => {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" disabled={isPending} className="w-full">
+                  <Button type="submit" className="w-full" disabled={isPending}>
                     Sign up
                   </Button>
                 </div>
                 <div className="text-center text-sm">
-                  Already have an account?
+                  Already have an account?{" "}
                   <Link href="/login" className="underline underline-offset-4">
-                    login
+                    Login
                   </Link>
                 </div>
               </div>
@@ -183,6 +216,6 @@ const Register = () => {
       </Card>
     </div>
   );
-};
+}
 
-export default Register;
+export default RegisterForm;

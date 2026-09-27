@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
 import prisma from "@/lib/db";
 import { polarClient } from "@/lib/polar";
+import { ensurePolarCustomer } from "@/lib/polar-customer";
 import {
   polar,
   checkout,
@@ -17,12 +18,42 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    autoSignin: true,
+    autoSignIn: true,
+  },
+
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          await ensurePolarCustomer(user);
+        },
+      },
+    },
+  },
+
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google", "github"],
+    },
+  },
+
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+    },
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      prompt: "select_account",
+    },
   },
   plugins: [
     polar({
       client: polarClient,
-      createCustomerOnSignUp: true,
+      // handled by the databaseHooks above so duplicates never break signup
+      createCustomerOnSignUp: false,
       use: [
         checkout({
           products: [
