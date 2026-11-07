@@ -5,5 +5,8 @@ export const polarClient = new Polar({
   // Use 'sandbox' if you're using the Polar Sandbox environment
   // Remember that access tokens, products, etc. are completely separated between environments.
   // Access tokens obtained in Production are for instance not usable in the Sandbox environment.
-  server: process.env.NODE_ENV !== "production" ? "sandbox" : "production",
+  // Pinned to sandbox: the available POLAR_ACCESS_TOKEN is a sandbox token.
+  // Switch to "production" only together with a production token AND
+  // production product IDs in src/lib/auth.ts.
+  server: "sandbox",
 });
