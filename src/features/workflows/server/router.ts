@@ -106,7 +106,7 @@ export const WorkflowsRouter = createTRPCRouter({
             fromNodeId: edge.source,
             toNodeId: edge.target,
             fromOutput: edge.sourceHandle || "main",
-            fromInput: edge.targetHandle || "main",
+            toInput: edge.targetHandle || "main",
           })),
         });
 
